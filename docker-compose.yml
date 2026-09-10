@@ -1,0 +1,83 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-itnotice}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-itnotice}
+      POSTGRES_DB: ${POSTGRES_DB:-itnotice}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '${POSTGRES_HOST_PORT:-5432}:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-itnotice}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: ['start-dev', '--import-realm']
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HTTP_PORT: '8080'
+    volumes:
+      - ./deploy/keycloak:/opt/keycloak/data/import:ro
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
+
+  # Local SMTP catcher for development. Configure the Email channel with
+  # host=mailpit, port=1025, secure=false to see messages at http://localhost:8025.
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.api
+    ports:
+      - '4000:4000'
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://${POSTGRES_USER:-itnotice}:${POSTGRES_PASSWORD:-itnotice}@postgres:5432/${POSTGRES_DB:-itnotice}
+      OIDC_ISSUER_URL: ${OIDC_ISSUER_URL:-http://keycloak:8080/realms/itnotice}
+      OIDC_ROLES_CLAIM: ${OIDC_ROLES_CLAIM:-realm_access.roles}
+      AUTH_DISABLED: ${AUTH_DISABLED:-false}
+      ITNOTICE_ENCRYPTION_KEY: ${ITNOTICE_ENCRYPTION_KEY:?set ITNOTICE_ENCRYPTION_KEY in .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+      KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL:-http://keycloak:8080}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-itnotice}
+      KEYCLOAK_SYNC_CLIENT_ID: ${KEYCLOAK_SYNC_CLIENT_ID:-itnotice-sync}
+      KEYCLOAK_SYNC_CLIENT_SECRET: ${KEYCLOAK_SYNC_CLIENT_SECRET:-change-me-sync-secret}
+      DIRECTORY_SYNC_INTERVAL_MINUTES: ${DIRECTORY_SYNC_INTERVAL_MINUTES:-60}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.web
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:4000}
+        VITE_OIDC_AUTHORITY: ${VITE_OIDC_AUTHORITY:-http://localhost:8080/realms/itnotice}
+        VITE_OIDC_CLIENT_ID: ${VITE_OIDC_CLIENT_ID:-itnotice-web}
+        VITE_APP_NAME: ${VITE_APP_NAME:-ITNotice}
+    ports:
+      - '5173:5173'
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

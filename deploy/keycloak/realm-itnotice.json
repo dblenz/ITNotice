@@ -1,0 +1,88 @@
+{
+  "realm": "itnotice",
+  "enabled": true,
+  "registrationAllowed": false,
+  "roles": {
+    "realm": [
+      { "name": "admin", "description": "Full administration: channels, directory sync, dispatch" },
+      { "name": "approver", "description": "Approve or reject notifications" },
+      { "name": "author", "description": "Create notifications" },
+      { "name": "employee", "description": "View notices and manage subscriptions" }
+    ]
+  },
+  "groups": [
+    { "name": "All Employees" },
+    { "name": "Engineering" },
+    { "name": "Finance" },
+    { "name": "Remote Staff" }
+  ],
+  "clients": [
+    {
+      "clientId": "itnotice-web",
+      "name": "ITNotice Web",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "protocol": "openid-connect",
+      "attributes": { "pkce.code.challenge.method": "S256" }
+    },
+    {
+      "clientId": "itnotice-sync",
+      "name": "ITNotice Directory Sync",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "secret": "change-me-sync-secret",
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "admin.user",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin.user@example.com",
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "admin", "temporary": false }],
+      "realmRoles": ["admin", "approver", "author", "employee"],
+      "groups": ["/All Employees"]
+    },
+    {
+      "username": "approver.user",
+      "enabled": true,
+      "firstName": "Approver",
+      "lastName": "User",
+      "email": "approver.user@example.com",
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "approver", "temporary": false }],
+      "realmRoles": ["approver", "employee"],
+      "groups": ["/All Employees"]
+    },
+    {
+      "username": "author.user",
+      "enabled": true,
+      "firstName": "Author",
+      "lastName": "User",
+      "email": "author.user@example.com",
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "author", "temporary": false }],
+      "realmRoles": ["author", "employee"],
+      "groups": ["/All Employees", "/Engineering"]
+    },
+    {
+      "username": "employee.user",
+      "enabled": true,
+      "firstName": "Employee",
+      "lastName": "User",
+      "email": "employee.user@example.com",
+      "emailVerified": true,
+      "attributes": { "phoneNumber": ["+15555550100"] },
+      "credentials": [{ "type": "password", "value": "employee", "temporary": false }],
+      "realmRoles": ["employee"],
+      "groups": ["/All Employees", "/Remote Staff"]
+    }
+  ]
+}

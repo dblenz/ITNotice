@@ -1,0 +1,430 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #e7edf5;
+  background: #0b1220;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #9db2d1;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3rem);
+}
+
+.tab-row {
+  display: inline-flex;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  color: #dfeaf7;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #3b82f6;
+}
+
+.primary-button,
+.approve-button,
+.reject-button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: #3b82f6;
+  color: white;
+}
+
+.approve-button {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+.reject-button {
+  background: rgba(248, 113, 113, 0.2);
+  color: #fca5a5;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.card,
+.panel {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+}
+
+.card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card span {
+  color: #9db2d1;
+}
+
+.card strong {
+  font-size: 2rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.1fr) minmax(320px, 1fr);
+  gap: 20px;
+}
+
+.stack-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.employee-view {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel {
+  padding: 24px;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #dfeaf7;
+  font-weight: 500;
+}
+
+.form-panel input,
+.form-panel select,
+.form-panel textarea {
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 10px;
+  padding: 0.8rem 0.9rem;
+  color: #f8fbff;
+}
+
+.form-panel textarea {
+  resize: vertical;
+}
+
+.send-mode-panel,
+.channel-row,
+.subscription-item,
+.approval-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.send-mode-panel label,
+.channel-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #dfeaf7;
+}
+
+.channel-row {
+  gap: 10px;
+}
+
+.channel-config-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.config-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 12px;
+}
+
+.channel-toggle {
+  background: rgba(30, 41, 59, 0.75);
+  border-radius: 999px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #dfeaf7;
+  cursor: pointer;
+}
+
+.channel-toggle.active {
+  background: #2563eb;
+  border-color: #60a5fa;
+}
+
+.channel-toggle:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.helper-copy {
+  margin: 14px 0 0;
+  color: #9db2d1;
+}
+
+.required-list {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.required-list strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.required-list ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #cfe1ff;
+}
+
+.notice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notice-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.notice-list li:first-child {
+  border-top: none;
+}
+
+.notice-list h3 {
+  margin: 0 0 4px;
+}
+
+.notice-list p,
+.notice-list small {
+  margin: 0;
+  color: #9db2d1;
+}
+
+.approval-item {
+  align-items: flex-start;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status.approved,
+.status.sent {
+  background: rgba(34, 197, 94, 0.13);
+  color: #86efac;
+}
+
+.status.submitted,
+.status.scheduled,
+.status.pending {
+  background: rgba(251, 191, 36, 0.13);
+  color: #fcd34d;
+}
+
+.status.rejected,
+.status.cancelled,
+.status.active {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+}
+
+.subscription-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subscription-item {
+  justify-content: space-between;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+}
+
+.submit-message {
+  margin: 0;
+  color: #a7f3d0;
+}
+
+@media (max-width: 900px) {
+  .content-grid,
+  .summary-grid,
+  .employee-view {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar,
+  .notice-list li,
+  .subscription-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* --- additions: auth, channel config, delivery log --- */
+.login-shell {
+  display: grid;
+  place-items: center;
+  min-height: 80vh;
+}
+
+.login-panel {
+  text-align: center;
+  max-width: 380px;
+}
+
+.config-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.config-provider {
+  color: #9db2d1;
+}
+
+.credential-form {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0 14px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.credential-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: #9db2d1;
+}
+
+.credential-form input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(11, 18, 32, 0.9);
+  color: #e7edf5;
+}
+
+.status.pending {
+  background: rgba(250, 204, 21, 0.15);
+  color: #fde68a;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+
+.delivery-log {
+  list-style: none;
+  padding: 10px 0 0;
+  margin: 8px 0 0;
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: #cbd5e1;
+}

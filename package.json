@@ -1,0 +1,17 @@
+{
+  "name": "itnotice",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @itnotice/web",
+    "dev:api": "npm run dev --workspace @itnotice/api",
+    "build": "npm run build --workspace @itnotice/shared && npm run build --workspace @itnotice/api && npm run build --workspace @itnotice/web",
+    "lint": "npm run lint --workspace @itnotice/web --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "devDependencies": {}
+}

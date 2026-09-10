@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/config.ts","./src/main.tsx","./src/session.ts","./src/components/approvalqueue.tsx","./src/components/channelconfig.tsx","./src/components/employeeportal.tsx","./src/components/notificationform.tsx"],"version":"5.9.3"}

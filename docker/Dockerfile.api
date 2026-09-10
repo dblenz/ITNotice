@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+WORKDIR /app
+COPY package*.json ./
+COPY apps/api/package*.json ./apps/api/
+COPY packages/shared/package*.json ./packages/shared/
+RUN npm install
+
+COPY packages/shared ./packages/shared
+COPY apps/api ./apps/api
+RUN npm run build --workspace @itnotice/shared && npm run build --workspace @itnotice/api
+
+EXPOSE 4000
+CMD ["npm", "run", "start", "--workspace", "@itnotice/api"]

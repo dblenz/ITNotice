@@ -47,7 +47,7 @@ export default function App() {
   }, [canSeeAdminTab]);
 
   useEffect(() => {
-    if (session.authenticated) void loadAll();
+    void loadAll();
   }, [session.authenticated, loadAll]);
 
   async function handleDirectorySync() {
@@ -65,20 +65,7 @@ export default function App() {
     );
   }
 
-  if (!session.authenticated) {
-    return (
-      <main className="app-shell login-shell">
-        <div className="panel login-panel">
-          <p className="eyebrow">Internal communications</p>
-          <h1>{config.appName}</h1>
-          <p className="helper-copy">Sign in with your organization account to continue.</p>
-          <button type="button" className="primary-button" onClick={session.login}>
-            Sign in
-          </button>
-        </div>
-      </main>
-    );
-  }
+  // Allow anonymous users to view the employee status feed without signing in.
 
   return (
     <main className="app-shell">
@@ -96,9 +83,15 @@ export default function App() {
           <button className={tab === 'employee' ? 'tab active' : 'tab'} onClick={() => setTab('employee')} type="button">
             Employee portal
           </button>
-          <button className="tab" type="button" onClick={session.logout} title={`Signed in as ${session.username}`}>
-            Sign out
-          </button>
+          {session.authenticated ? (
+            <button className="tab" type="button" onClick={session.logout} title={`Signed in as ${session.username}`}>
+              Sign out
+            </button>
+          ) : (
+            <button className="tab" type="button" onClick={session.login}>
+              Sign in
+            </button>
+          )}
         </div>
       </header>
 

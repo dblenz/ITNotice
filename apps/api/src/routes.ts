@@ -32,6 +32,32 @@ router.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'api', timestamp: new Date().toISOString() });
 });
 
+// Public employee status feed — no login required to view current notices.
+router.get('/api/employee/status', async (req, res) => {
+  const notifications = await getNotifications();
+  // If caller is authenticated the middleware (if applied) will populate req.user;
+  // otherwise treat as anonymous and show all active notices (or those matching no subscriptions).
+  const subscribedIds = req.user ? await getSubscribedAudienceIds(req.user.id) : [];
+
+  const visibleStates = new Set(['approved', 'scheduled', 'sent']);
+  const active = notifications.filter((item) => {
+    if (!visibleStates.has(item.approvalState)) return false;
+    if (subscribedIds.length === 0) return true;
+    return subscribedIds.includes(item.audience.id);
+  });
+
+  res.json({
+    statusPage: active.map((item) => ({
+      id: item.id,
+      title: item.title,
+      type: item.type,
+      summary: item.summary,
+      audience: item.audience.name,
+      approvedAt: item.approvedAt || null,
+    })),
+  });
+});
+
 // Everything below requires authentication.
 router.use('/api', authenticate);
 
@@ -132,36 +158,6 @@ router.get('/api/notifications/:id/deliveries', requireRole('admin', 'approver',
 });
 
 // ---------- employee portal ----------
-
-router.get('/api/employee/status', async (req, res, next) => {
-  try {
-    const [notifications, subscribedIds] = await Promise.all([
-      getNotifications(),
-      req.user ? getSubscribedAudienceIds(req.user.id) : Promise.resolve([]),
-    ]);
-
-    const visibleStates = new Set(['approved', 'scheduled', 'sent']);
-    const active = notifications.filter((item) => {
-      if (!visibleStates.has(item.approvalState)) return false;
-      // Employees with no directory data (e.g. before first sync) see everything.
-      if (subscribedIds.length === 0) return true;
-      return subscribedIds.includes(item.audience.id);
-    });
-
-    res.json({
-      statusPage: active.map((item) => ({
-        id: item.id,
-        title: item.title,
-        type: item.type,
-        summary: item.summary,
-        audience: item.audience.name,
-        approvedAt: item.approvedAt || null,
-      })),
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 router.get('/api/me/subscriptions', async (req, res, next) => {
   try {
